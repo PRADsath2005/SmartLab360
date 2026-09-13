@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Equipment Details - SmartLab360</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            background: #1e3a8a;
+            color: white;
+
+            padding: 18px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            font-size: 24px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* CONTAINER */
+
+        .container {
+
+            max-width: 1000px;
+
+            margin: 40px auto;
+
+            padding: 20px;
+        }
+
+        /* TITLE */
+
+        .page-title {
+
+            color: #1e3a8a;
+
+            margin-bottom: 25px;
+        }
+
+        .page-title p {
+
+            color: #6b7280;
+
+            margin-top: 8px;
+        }
+
+        /* CARD */
+
+        .card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+
+            color: #1e3a8a;
+
+            margin-bottom: 25px;
+        }
+
+        /* EQUIPMENT DETAILS */
+
+        .details-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+        .detail-item {
+
+            padding: 15px;
+
+            background: #f8fafc;
+
+            border-radius: 8px;
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .detail-label {
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            color: #1f2937;
+        }
+
+        /* STATUS */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .available {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .unavailable {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        /* DESCRIPTION */
+
+        .description {
+
+            margin-top: 20px;
+
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border-radius: 8px;
+
+            line-height: 1.6;
+
+            color: #4b5563;
+        }
+
+        /* MAINTENANCE */
+
+        .maintenance-card {
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            background: #fafafa;
+        }
+
+        .maintenance-top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 12px;
+        }
+
+        .maintenance-id {
+
+            font-weight: bold;
+
+            color: #1e3a8a;
+        }
+
+        .maintenance-problem {
+
+            color: #374151;
+
+            line-height: 1.5;
+
+            margin-bottom: 12px;
+        }
+
+        .maintenance-info {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+        /* MAINTENANCE STATUS */
+
+        .maintenance-status {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 15px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .status-pending {
+
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+        .status-progress {
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+        .status-completed {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .status-default {
+
+            background: #e5e7eb;
+
+            color: #374151;
+        }
+
+        /* EMPTY */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #6b7280;
+        }
+
+        /* LOADING */
+
+        .loading {
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #6b7280;
+
+            font-size: 16px;
+        }
+
+        /* ERROR */
+
+        .error {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            padding: 18px;
+
+            border-radius: 8px;
+
+            text-align: center;
+        }
+
+        /* BUTTON */
+
+        .back-btn {
+
+            display: inline-block;
+
+            background: #1e3a8a;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 10px 18px;
+
+            border-radius: 7px;
+
+            margin-top: 10px;
+        }
+
+        .back-btn:hover {
+
+            background: #172554;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            nav {
+
+                padding: 15px 20px;
+            }
+
+            .container {
+
+                margin: 20px auto;
+
+                padding: 15px;
+            }
+
+            .card {
+
+                padding: 20px;
+            }
+
+            .details-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .maintenance-info {
+
+                grid-template-columns: 1fr;
+            }
+
+            .maintenance-top {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <h2>
+        SmartLab360
+    </h2>
+
+    <a href="equipment.html">
+        ← Equipment
+    </a>
+
+</nav>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- PAGE TITLE -->
+
+    <div class="page-title">
+
+        <h1>
+            Equipment Details
+        </h1>
+
+        <p>
+            View equipment information and maintenance history.
+        </p>
+
+    </div>
+
+
+
+    <!-- LOADING -->
+
+    <div
+        id="loading"
+        class="loading">
+
+        Loading equipment details...
+
+    </div>
+
+
+
+    <!-- ERROR -->
+
+    <div
+        id="error"
+        class="error"
+        style="display:none;">
+
+    </div>
+
+
+
+    <!-- EQUIPMENT CARD -->
+
+    <div
+        id="equipmentCard"
+        class="card"
+        style="display:none;">
+
+        <h2>
+            🔬 Equipment Information
+        </h2>
+
+
+        <div class="details-grid">
+
+
+            <!-- ID -->
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Equipment ID
+                </div>
+
+                <div
+                    id="equipmentId"
+                    class="detail-value">
+
+                </div>
+
+            </div>
+
+
+            <!-- NAME -->
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Equipment Name
+                </div>
+
+                <div
+                    id="equipmentName"
+                    class="detail-value">
+
+                </div>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Category
+                </div>
+
+                <div
+                    id="equipmentCategory"
+                    class="detail-value">
+
+                </div>
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Location
+                </div>
+
+                <div
+                    id="equipmentLocation"
+                    class="detail-value">
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Current Status
+                </div>
+
+                <div>
+
+                    <span
+                        id="equipmentStatus"
+                        class="status">
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="description">
+
+            <strong>
+                Description
+            </strong>
+
+            <p
+                id="equipmentDescription"
+                style="margin-top:8px;">
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= MAINTENANCE CARD ================= -->
+
+    <div
+        id="maintenanceCard"
+        class="card"
+        style="display:none;">
+
+        <h2>
+            🛠️ Maintenance History
+        </h2>
+
+
+        <div
+            id="maintenanceList">
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- BACK BUTTON -->
+
+    <a
+        href="equipment.html"
+        class="back-btn">
+
+        ← Back to Equipment
+
+    </a>
+
+
+</div>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =================================================
+   GET EQUIPMENT ID FROM URL
+   ================================================= */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const equipmentId =
+    urlParams.get("id");
+
+
+
+/* =================================================
+   CHECK ID
+   ================================================= */
+
+if (!equipmentId) {
+
+    showError(
+        "Equipment ID is missing."
+    );
+
+} else {
+
+    loadEquipment();
+
+}
+
+
+
+/* =================================================
+   LOAD EQUIPMENT
+   ================================================= */
+
+async function loadEquipment() {
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `/api/equipment/${equipmentId}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Equipment not found"
+            );
+
+        }
+
+
+        const equipment =
+            await response.json();
+
+
+
+        /* DISPLAY EQUIPMENT */
+
+        document.getElementById(
+            "equipmentId"
+        ).textContent =
+            equipment.id;
+
+
+        document.getElementById(
+            "equipmentName"
+        ).textContent =
+            equipment.name || "-";
+
+
+        document.getElementById(
+            "equipmentCategory"
+        ).textContent =
+            equipment.category || "-";
+
+
+        document.getElementById(
+            "equipmentLocation"
+        ).textContent =
+            equipment.location || "-";
+
+
+        document.getElementById(
+            "equipmentDescription"
+        ).textContent =
+            equipment.description ||
+            "No description available.";
+
+
+
+        /* STATUS */
+
+        const statusElement =
+            document.getElementById(
+                "equipmentStatus"
+            );
+
+
+        const status =
+            String(
+                equipment.status || "UNKNOWN"
+            ).toUpperCase();
+
+
+        statusElement.textContent =
+            status;
+
+
+        if (status === "AVAILABLE") {
+
+            statusElement.classList.add(
+                "available"
+            );
+
+        } else {
+
+            statusElement.classList.add(
+                "unavailable"
+            );
+
+        }
+
+
+
+        /* SHOW CARD */
+
+        document.getElementById(
+            "loading"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "equipmentCard"
+        ).style.display =
+            "block";
+
+
+
+        /* LOAD MAINTENANCE */
+
+        loadMaintenance();
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        showError(
+            "Unable to load equipment details."
+        );
+
+
+    }
+
+}
+
+
+
+/* =================================================
+   LOAD MAINTENANCE HISTORY
+   ================================================= */
+
+async function loadMaintenance() {
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `/api/maintenance/equipment/${equipmentId}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Maintenance API failed"
+            );
+
+        }
+
+
+        const requests =
+            await response.json();
+
+
+
+        const maintenanceList =
+            document.getElementById(
+                "maintenanceList"
+            );
+
+
+        /* SHOW MAINTENANCE CARD */
+
+        document.getElementById(
+            "maintenanceCard"
+        ).style.display =
+            "block";
+
+
+
+        /* NO RECORDS */
+
+        if (
+            !requests ||
+            requests.length === 0
+        ) {
+
+            maintenanceList.innerHTML = `
+
+                <div class="empty">
+
+                    <div style="font-size:40px;">
+                        ✅
+                    </div>
+
+                    <p style="margin-top:10px;">
+
+                        No maintenance records
+                        found for this equipment.
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* SORT NEWEST FIRST */
+
+        requests.sort(
+            (a, b) =>
+                (b.id || 0) -
+                (a.id || 0)
+        );
+
+
+
+        /* CREATE HTML */
+
+        maintenanceList.innerHTML =
+            requests.map(
+                request => {
+
+
+                    const status =
+                        String(
+                            request.status ||
+                            "UNKNOWN"
+                        ).toUpperCase();
+
+
+                    let statusClass =
+                        "status-default";
+
+
+                    if (
+                        status === "PENDING"
+                    ) {
+
+                        statusClass =
+                            "status-pending";
+
+                    }
+
+
+                    else if (
+                        status === "IN_PROGRESS"
+                    ) {
+
+                        statusClass =
+                            "status-progress";
+
+                    }
+
+
+                    else if (
+                        status === "COMPLETED"
+                    ) {
+
+                        statusClass =
+                            "status-completed";
+
+                    }
+
+
+
+                    return `
+
+                        <div
+                            class="maintenance-card">
+
+                            <div
+                                class="maintenance-top">
+
+                                <div
+                                    class="maintenance-id">
+
+                                    Maintenance #${request.id}
+
+                                </div>
+
+                                <span
+                                    class="maintenance-status ${statusClass}">
+
+                                    ${status}
+
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="maintenance-problem">
+
+                                <strong>
+                                    Problem:
+                                </strong>
+
+                                ${escapeHtml(
+                                    request.problemDescription ||
+                                    "No description"
+                                )}
+
+                            </div>
+
+
+                            <div
+                                class="maintenance-info">
+
+
+                                <div>
+
+                                    <strong>
+                                        Reported By
+                                    </strong>
+
+                                    <br>
+
+                                    ${
+                                        request.reportedBy?.name ||
+                                        "-"
+                                    }
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+                                        Maintenance Date
+                                    </strong>
+
+                                    <br>
+
+                                    ${
+                                        request.maintenanceDate ||
+                                        "Not scheduled"
+                                    }
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+                                        Assigned To
+                                    </strong>
+
+                                    <br>
+
+                                    ${
+                                        request.assignedTo ||
+                                        "Not assigned"
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+
+            ).join("");
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        document.getElementById(
+            "maintenanceCard"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "maintenanceList"
+        ).innerHTML = `
+
+            <div class="empty">
+
+                Unable to load maintenance history.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =================================================
+   ESCAPE HTML
+   ================================================= */
+
+function escapeHtml(value) {
+
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+
+/* =================================================
+   ERROR
+   ================================================= */
+
+function showError(message) {
+
+
+    document.getElementById(
+        "loading"
+    ).style.display =
+        "none";
+
+
+    const error =
+        document.getElementById(
+            "error"
+        );
+
+
+    error.textContent =
+        message;
+
+
+    error.style.display =
+        "block";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

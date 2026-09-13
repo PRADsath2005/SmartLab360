@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartLab360 - Equipment</title>
+
+    <script src="js/auth.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        /* =========================
+           NAVBAR
+           ========================= */
+
+        .navbar {
+            background: #4f46e5;
+            color: white;
+            padding: 15px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .logout-btn {
+            border: none;
+            background: white;
+            color: #4f46e5;
+
+            padding: 8px 15px;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #eef2ff;
+        }
+
+
+        /* =========================
+           CONTAINER
+           ========================= */
+
+        .container {
+            max-width: 1200px;
+
+            margin: 35px auto;
+
+            padding: 0 20px;
+        }
+
+
+        /* =========================
+           HEADER
+           ========================= */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+        }
+
+        .page-header p {
+            color: #666;
+            margin-top: 5px;
+        }
+
+
+        /* =========================
+           BUTTON
+           ========================= */
+
+        .btn {
+            border: none;
+
+            padding: 10px 16px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           TABLE
+           ========================= */
+
+        .table-card {
+            background: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+        }
+
+        th {
+            background: #eef2ff;
+
+            color: #3730a3;
+
+            padding: 14px;
+
+            text-align: left;
+
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+
+            border-bottom: 1px solid #eee;
+
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+
+        /* =========================
+           STATUS
+           ========================= */
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .unavailable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .maintenance {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .unknown {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+
+        /* =========================
+           ACTIONS
+           ========================= */
+
+        .actions {
+            display: flex;
+
+            gap: 6px;
+
+            flex-wrap: wrap;
+        }
+
+
+        /* =========================
+           MODAL
+           ========================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,0.55);
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+
+            width: 100%;
+
+            max-width: 500px;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .close {
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #666;
+        }
+
+
+        /* =========================
+           FORM
+           ========================= */
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4f46e5;
+        }
+
+        textarea {
+            resize: vertical;
+
+            min-height: 90px;
+        }
+
+        .form-actions {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+
+        /* =========================
+           QR MODAL
+           ========================= */
+
+        .qr-container {
+            text-align: center;
+        }
+
+        .qr-container img {
+            width: 300px;
+
+            max-width: 100%;
+
+            height: auto;
+
+            margin: 15px auto;
+
+            display: block;
+
+            border: 1px solid #eee;
+
+            padding: 10px;
+        }
+
+        .qr-info {
+            color: #666;
+
+            font-size: 13px;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           LOADING / EMPTY
+           ========================= */
+
+        .message {
+            padding: 20px;
+
+            text-align: center;
+
+            color: #666;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .page-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+     ========================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        SmartLab360
+    </div>
+
+    <div class="nav-right">
+
+        <a href="dashboard.html"
+           class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="booking.html"
+           class="nav-link">
+            Book Equipment
+        </a>
+
+        <a href="notifications.html"
+           class="nav-link">
+            Notifications
+        </a>
+
+        <button
+                class="logout-btn"
+                onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================
+     MAIN
+     ========================= -->
+
+<div class="container">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Laboratory Equipment
+            </h1>
+
+            <p>
+                Manage and track laboratory equipment
+            </p>
+
+        </div>
+
+
+        <button
+                class="btn btn-primary"
+                onclick="openAddModal()">
+
+            + Add Equipment
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =========================
+         EQUIPMENT TABLE
+         ========================= -->
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    ID
+                </th>
+
+                <th>
+                    Name
+                </th>
+
+                <th>
+                    Category
+                </th>
+
+                <th>
+                    Location
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+                <th>
+                    Actions
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="equipmentTableBody">
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="message">
+
+                    Loading equipment...
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     ADD / EDIT MODAL
+     ========================= -->
+
+<div
+        id="equipmentModal"
+        class="modal">
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Add Equipment
+            </h2>
+
+            <span
+                    class="close"
+                    onclick="closeEquipmentModal()">
+
+                &times;
+
+            </span>
+
+        </div>
+
+
+        <form
+                id="equipmentForm">
+
+
+            <input
+                    type="hidden"
+                    id="equipmentId">
+
+
+            <div class="form-group">
+
+                <label for="name">
+                    Equipment Name
+                </label>
+
+                <input
+                        type="text"
+                        id="name"
+                        required
+                        placeholder="Digital Oscilloscope">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <input
+                        type="text"
+                        id="category"
+                        placeholder="Electronic Test Equipment">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="location">
+                    Location
+                </label>
+
+                <input
+                        type="text"
+                        id="location"
+                        placeholder="VLSI Lab - Room 204">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="status">
+                    Status
+                </label>
+
+                <select id="status">
+
+                    <option value="AVAILABLE">
+                        AVAILABLE
+                    </option>
+
+                    <option value="UNAVAILABLE">
+                        UNAVAILABLE
+                    </option>
+
+                    <option value="MAINTENANCE">
+                        MAINTENANCE
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                        id="description"
+                        placeholder="Enter equipment description">
+                </textarea>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeEquipmentModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                    Save Equipment
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     QR MODAL
+     ========================= -->
+
+<div
+        id="qrModal"
+        class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>
+                Equipment QR Code
+            </h2>
+
+            <span
+                    class="close"
+                    onclick="closeQRModal()">
+
+                &times;
+
+            </span>
+
+        </div>
+
+
+        <div class="qr-container">
+
+            <h3 id="qrEquipmentName">
+                Equipment
+            </h3>
+
+            <img
+                    id="qrImage"
+                    src=""
+                    alt="Equipment QR Code">
+
+            <p class="qr-info">
+                Scan this QR code using a phone
+                to view equipment details and
+                maintenance history.
+            </p>
+
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="closeQRModal()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+// =====================================================
+// AUTH CHECK
+// =====================================================
+
+if (!requireLogin()) {
+
+    throw new Error(
+        "User is not authenticated"
+    );
+
+}
+
+
+// =====================================================
+// LOAD EQUIPMENT
+// =====================================================
+
+async function loadEquipment() {
+
+    const tableBody =
+        document.getElementById(
+            "equipmentTableBody"
+        );
+
+
+    try {
+
+        const response =
+            await authFetch(
+                "/api/equipment"
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load equipment"
+            );
+
+        }
+
+
+        const equipment =
+            await response.json();
+
+
+        tableBody.innerHTML = "";
+
+
+        if (
+            !equipment ||
+            equipment.length === 0
+        ) {
+
+            tableBody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="message">
+
+                        No equipment found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+        }
+
+
+        equipment.forEach(
+            item => {
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${escapeHtml(item.id)}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHtml(
+                                item.name
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            item.category || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            item.location || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${getStatusBadge(
+                            item.status
+                        )}
+                    </td>
+
+                    <td>
+
+                        <div class="actions">
+
+                            <button
+                                class="btn btn-primary btn-small"
+                                onclick="editEquipment(${item.id})">
+
+                                Edit
+
+                            </button>
+
+
+                            <button
+                                class="btn btn-danger btn-small"
+                                onclick="deleteEquipment(${item.id})">
+
+                                Delete
+
+                            </button>
+
+
+                            <button
+                                class="btn btn-secondary btn-small"
+                                onclick="viewDetails(${item.id})">
+
+                                Details
+
+                            </button>
+
+
+                            <button
+                                class="btn btn-success btn-small"
+                                onclick="showQRCode(
+                                    ${item.id},
+                                    '${escapeJs(item.name)}'
+                                )">
+
+                                QR Code
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                `;
+
+
+                tableBody.appendChild(
+                    row
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Equipment loading error:",
+            error
+        );
+
+
+        tableBody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="message">
+
+                    Failed to load equipment.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// =====================================================
+// STATUS BADGE
+// =====================================================
+
+function getStatusBadge(status) {
+
+    const value =
+        String(
+            status || "UNKNOWN"
+        ).toUpperCase();
+
+
+    let className =
+        "unknown";
+
+
+    if (value === "AVAILABLE") {
+
+        className =
+            "available";
+
+    } else if (
+        value === "MAINTENANCE"
+    ) {
+
+        className =
+            "maintenance";
+
+    } else if (
+        value === "UNAVAILABLE"
+    ) {
+
+        className =
+            "unavailable";
+
+    }
+
+
+    return `
+
+        <span class="status ${className}">
+
+            ${escapeHtml(value)}
+
+        </span>
+
+    `;
+}
+
+
+// =====================================================
+// OPEN ADD MODAL
+// =====================================================
+
+function openAddModal() {
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Add Equipment";
+
+
+    document.getElementById(
+        "equipmentForm"
+    ).reset();
+
+
+    document.getElementById(
+        "equipmentId"
+    ).value = "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        "AVAILABLE";
+
+
+    document.getElementById(
+        "equipmentModal"
+    ).style.display =
+        "flex";
+
+}
+
+
+// =====================================================
+// CLOSE EQUIPMENT MODAL
+// =====================================================
+
+function closeEquipmentModal() {
+
+    document.getElementById(
+        "equipmentModal"
+    ).style.display =
+        "none";
+
+}
+
+
+// =====================================================
+// ADD / UPDATE EQUIPMENT
+// =====================================================
+
+document.getElementById(
+    "equipmentForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const id =
+            document.getElementById(
+                "equipmentId"
+            ).value;
+
+
+        const equipment = {
+
+            name:
+                document.getElementById(
+                    "name"
+                ).value.trim(),
+
+            category:
+                document.getElementById(
+                    "category"
+                ).value.trim(),
+
+            location:
+                document.getElementById(
+                    "location"
+                ).value.trim(),
+
+            status:
+                document.getElementById(
+                    "status"
+                ).value,
+
+            description:
+                document.getElementById(
+                    "description"
+                ).value.trim()
+
+        };
+
+
+        if (!equipment.name) {
+
+            alert(
+                "Equipment name is required"
+            );
+
+            return;
+        }
+
+
+        try {
+
+            let response;
+
+
+            if (id) {
+
+                // UPDATE
+
+                response =
+                    await authFetch(
+                        `/api/equipment/${id}`,
+                        {
+                            method: "PUT",
+
+                            body:
+                                JSON.stringify(
+                                    equipment
+                                )
+                        }
+                    );
+
+            } else {
+
+                // ADD
+
+                response =
+                    await authFetch(
+                        "/api/equipment",
+                        {
+                            method: "POST",
+
+                            body:
+                                JSON.stringify(
+                                    equipment
+                                )
+                        }
+                    );
+
+            }
+
+
+            if (!response) {
+                return;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Operation failed"
+                );
+
+            }
+
+
+            alert(
+                id
+                    ? "Equipment updated successfully"
+                    : "Equipment added successfully"
+            );
+
+
+            closeEquipmentModal();
+
+            loadEquipment();
+
+
+        } catch (error) {
+
+            console.error(
+                "Save equipment error:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Failed to save equipment"
+            );
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// EDIT EQUIPMENT
+// =====================================================
+
+async function editEquipment(id) {
+
+    try {
+
+        const response =
+            await authFetch(
+                `/api/equipment/${id}`
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Equipment not found"
+            );
+
+        }
+
+
+        const item =
+            await response.json();
+
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            "Edit Equipment";
+
+
+        document.getElementById(
+            "equipmentId"
+        ).value =
+            item.id;
+
+
+        document.getElementById(
+            "name"
+        ).value =
+            item.name || "";
+
+
+        document.getElementById(
+            "category"
+        ).value =
+            item.category || "";
+
+
+        document.getElementById(
+            "location"
+        ).value =
+            item.location || "";
+
+
+        document.getElementById(
+            "status"
+        ).value =
+            item.status || "AVAILABLE";
+
+
+        document.getElementById(
+            "description"
+        ).value =
+            item.description || "";
+
+
+        document.getElementById(
+            "equipmentModal"
+        ).style.display =
+            "flex";
+
+
+    } catch (error) {
+
+        console.error(
+            "Edit equipment error:",
+            error
+        );
+
+
+        alert(
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE EQUIPMENT
+// =====================================================
+
+async function deleteEquipment(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this equipment?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await authFetch(
+                `/api/equipment/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        const data =
+            await response.text();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data ||
+                "Failed to delete equipment"
+            );
+
+        }
+
+
+        alert(
+            "Equipment deleted successfully"
+        );
+
+
+        loadEquipment();
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete equipment error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Failed to delete equipment"
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// VIEW DETAILS
+// =====================================================
+
+function viewDetails(id) {
+
+    window.location.href =
+        `equipment-details.html?id=${id}`;
+
+}
+
+
+// =====================================================
+// SHOW QR CODE
+// =====================================================
+
+function showQRCode(
+    id,
+    name
+) {
+
+    const qrModal =
+        document.getElementById(
+            "qrModal"
+        );
+
+
+    const qrImage =
+        document.getElementById(
+            "qrImage"
+        );
+
+
+    const qrName =
+        document.getElementById(
+            "qrEquipmentName"
+        );
+
+
+    qrName.textContent =
+        name;
+
+
+    // Browser requests QR API.
+    // JWT token cannot be attached to an
+    // ordinary <img src=""> request.
+    //
+    // So we fetch the image with authFetch()
+    // and create a temporary Blob URL.
+
+    loadQRCodeImage(
+        id,
+        qrImage
+    );
+
+
+    qrModal.style.display =
+        "flex";
+
+}
+
+
+// =====================================================
+// LOAD QR IMAGE WITH JWT
+// =====================================================
+
+async function loadQRCodeImage(
+    id,
+    imageElement
+) {
+
+    try {
+
+        const response =
+            await authFetch(
+                `/api/equipment/${id}/qrcode`
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to generate QR code"
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        const imageUrl =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        imageElement.onload =
+            function() {
+
+                URL.revokeObjectURL(
+                    imageUrl
+                );
+
+            };
+
+
+        imageElement.src =
+            imageUrl;
+
+
+    } catch (error) {
+
+        console.error(
+            "QR code error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Failed to generate QR code"
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// CLOSE QR MODAL
+// =====================================================
+
+function closeQRModal() {
+
+    document.getElementById(
+        "qrModal"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "qrImage"
+    ).src = "";
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+// =====================================================
+// ESCAPE JAVASCRIPT STRING
+// =====================================================
+
+function escapeJs(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /\\/g,
+        "\\\\"
+    )
+    .replace(
+        /'/g,
+        "\\'"
+    )
+    .replace(
+        /"/g,
+        '\\"'
+    )
+    .replace(
+        /\n/g,
+        "\\n"
+    )
+    .replace(
+        /\r/g,
+        "\\r"
+    );
+
+}
+
+
+// =====================================================
+// CLOSE MODALS WHEN CLICKING OUTSIDE
+// =====================================================
+
+window.addEventListener(
+    "click",
+    function(event) {
+
+        const equipmentModal =
+            document.getElementById(
+                "equipmentModal"
+            );
+
+        const qrModal =
+            document.getElementById(
+                "qrModal"
+            );
+
+
+        if (
+            event.target ===
+            equipmentModal
+        ) {
+
+            closeEquipmentModal();
+
+        }
+
+
+        if (
+            event.target ===
+            qrModal
+        ) {
+
+            closeQRModal();
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// INITIAL LOAD
+// =====================================================
+
+loadEquipment();
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartLab360 - Notifications</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            color: #1649a0;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .dashboard-link {
+            color: #1649a0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #111827;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .top-bar h2 {
+            color: #1e293b;
+        }
+
+        .read-all-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .read-all-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .notification {
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            padding: 18px;
+            margin-bottom: 14px;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .notification.unread {
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-message {
+            color: #1e293b;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .notification-date {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .notification-actions {
+            margin-top: 12px;
+        }
+
+        .read-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .read-label {
+            color: #16a34a;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .loading,
+        .empty,
+        .error {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading {
+            color: #64748b;
+        }
+
+        .empty {
+            color: #64748b;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .container {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .notification-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <div class="logo">
+            SmartLab360
+        </div>
+
+        <a
+            href="dashboard.html"
+            class="dashboard-link">
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+        <h1>
+            Notifications
+        </h1>
+
+        <p class="subtitle">
+            View your booking and maintenance updates
+        </p>
+
+
+        <div class="card">
+
+
+            <div class="top-bar">
+
+                <h2>
+                    My Notifications
+                </h2>
+
+                <div>
+
+                    <span
+                        id="unreadBadge"
+                        class="badge">
+
+                        0 Unread
+
+                    </span>
+
+                    <button
+                        class="read-all-btn"
+                        onclick="markAllAsRead()">
+
+                        Mark All as Read
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="loading"
+                class="loading">
+
+                Loading notifications...
+
+            </div>
+
+
+            <div
+                id="error"
+                class="error"
+                style="display:none;">
+
+            </div>
+
+
+            <div
+                id="empty"
+                class="empty"
+                style="display:none;">
+
+                🔔 No notifications found.
+
+            </div>
+
+
+            <div id="notificationList">
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- JWT AUTH -->
+
+    <script src="js/auth.js"></script>
+
+
+    <script>
+
+
+        // =========================================
+        // LOGIN CHECK
+        // =========================================
+
+        if (!requireLogin()) {
+
+            throw new Error(
+                "User not logged in"
+            );
+
+        }
+
+
+        // =========================================
+        // CURRENT USER
+        // =========================================
+
+        const user =
+            getCurrentUser();
+
+
+        // =========================================
+        // LOAD NOTIFICATIONS
+        // =========================================
+
+        async function loadNotifications() {
+
+            const loading =
+                document.getElementById(
+                    "loading"
+                );
+
+            const error =
+                document.getElementById(
+                    "error"
+                );
+
+            const empty =
+                document.getElementById(
+                    "empty"
+                );
+
+            const list =
+                document.getElementById(
+                    "notificationList"
+                );
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/notifications/user/${user.userId}`
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load notifications"
+                    );
+
+                }
+
+
+                const notifications =
+                    await response.json();
+
+
+                loading.style.display =
+                    "none";
+
+
+                list.innerHTML = "";
+
+
+                if (
+                    !notifications ||
+                    notifications.length === 0
+                ) {
+
+                    empty.style.display =
+                        "block";
+
+                    updateUnreadCount(
+                        0
+                    );
+
+                    return;
+
+                }
+
+
+                empty.style.display =
+                    "none";
+
+
+                let unreadCount = 0;
+
+
+                notifications.forEach(
+                    notification => {
+
+                        if (
+                            !notification.readStatus
+                        ) {
+
+                            unreadCount++;
+
+                        }
+
+
+                        const div =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        div.className =
+                            notification.readStatus
+                                ? "notification"
+                                : "notification unread";
+
+
+                        const createdAt =
+                            notification.createdAt
+                                ? formatDate(
+                                    notification.createdAt
+                                )
+                                : "";
+
+
+                        div.innerHTML = `
+
+                            <div
+                                class="notification-header">
+
+                                <div
+                                    class="notification-message">
+
+                                    🔔
+                                    ${escapeHtml(
+                                        notification.message
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="notification-date">
+
+                                ${createdAt}
+
+                            </div>
+
+
+                            <div
+                                class="notification-actions">
+
+                                ${
+                                    notification.readStatus
+
+                                    ?
+
+                                    `<span class="read-label">
+                                        ✓ Read
+                                    </span>`
+
+                                    :
+
+                                    `<button
+                                        class="read-btn"
+                                        onclick="markAsRead(${notification.id})">
+
+                                        Mark as Read
+
+                                    </button>`
+                                }
+
+                            </div>
+
+                        `;
+
+
+                        list.appendChild(
+                            div
+                        );
+
+                    }
+                );
+
+
+                updateUnreadCount(
+                    unreadCount
+                );
+
+
+            } catch (err) {
+
+                console.error(
+                    err
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                error.style.display =
+                    "block";
+
+
+                error.textContent =
+                    "Failed to load notifications.";
+
+            }
+
+        }
+
+
+        // =========================================
+        // MARK ONE AS READ
+        // =========================================
+
+        async function markAsRead(
+            notificationId
+        ) {
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/notifications/${notificationId}/read`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                if (response.ok) {
+
+                    loadNotifications();
+
+                } else {
+
+                    alert(
+                        "Failed to mark notification as read."
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                alert(
+                    "Something went wrong."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // MARK ALL AS READ
+        // =========================================
+
+        async function markAllAsRead() {
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/notifications/user/${user.userId}/read-all`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                if (response.ok) {
+
+                    loadNotifications();
+
+                } else {
+
+                    alert(
+                        "Failed to mark notifications as read."
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                alert(
+                    "Something went wrong."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // UPDATE UNREAD BADGE
+        // =========================================
+
+        function updateUnreadCount(
+            count
+        ) {
+
+            const badge =
+                document.getElementById(
+                    "unreadBadge"
+                );
+
+
+            badge.textContent =
+                count + " Unread";
+
+        }
+
+
+        // =========================================
+        // FORMAT DATE
+        // =========================================
+
+        function formatDate(
+            dateString
+        ) {
+
+            try {
+
+                const date =
+                    new Date(
+                        dateString
+                    );
+
+
+                return date.toLocaleString();
+
+            } catch (error) {
+
+                return dateString;
+
+            }
+
+        }
+
+
+        // =========================================
+        // HTML ESCAPE
+        // =========================================
+
+        function escapeHtml(
+            text
+        ) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.textContent =
+                text || "";
+
+            return div.innerHTML;
+
+        }
+
+
+        // =========================================
+        // INITIAL LOAD
+        // =========================================
+
+        loadNotifications();
+
+
+    </script>
+
+
+</body>
+
+</html>

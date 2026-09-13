@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartLab360 - Admin Bookings</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #1e293b;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #111827;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        .card h2 {
+            color: #1e293b;
+            margin-bottom: 22px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #eef2f7;
+            color: #1e293b;
+        }
+
+        td {
+            color: #334155;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-btn {
+            border: none;
+            color: white;
+            padding: 7px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .approve-btn {
+            background: #16a34a;
+        }
+
+        .approve-btn:hover {
+            background: #15803d;
+        }
+
+        .reject-btn {
+            background: #ef4444;
+        }
+
+        .reject-btn:hover {
+            background: #dc2626;
+        }
+
+        .delete-btn {
+            background: #64748b;
+        }
+
+        .delete-btn:hover {
+            background: #475569;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        .error {
+            text-align: center;
+            padding: 30px;
+            color: #dc2626;
+        }
+
+        .admin-info {
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .container {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <div class="logo">
+            🔬 SmartLab360 - Admin
+        </div>
+
+        <div class="nav-links">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="admin-maintenance.html">
+                Maintenance
+            </a>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <h1>
+            Booking Management
+        </h1>
+
+        <p class="subtitle">
+            Review and manage laboratory equipment booking requests
+        </p>
+
+
+        <div class="card">
+
+
+            <div class="admin-info">
+
+                Logged in as:
+
+                <strong id="adminName">
+                    Loading...
+                </strong>
+
+                &nbsp; | &nbsp;
+
+                Role:
+
+                <strong id="adminRole">
+                    Loading...
+                </strong>
+
+            </div>
+
+
+            <h2>
+                All Booking Requests
+            </h2>
+
+
+            <div
+                id="loading"
+                class="loading">
+
+                Loading bookings...
+
+            </div>
+
+
+            <div
+                id="error"
+                class="error"
+                style="display:none;">
+
+            </div>
+
+
+            <div
+                id="empty"
+                class="empty"
+                style="display:none;">
+
+                No booking requests found.
+
+            </div>
+
+
+            <table
+                id="bookingTable"
+                style="display:none;">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Student</th>
+
+                        <th>Email</th>
+
+                        <th>Equipment</th>
+
+                        <th>Date</th>
+
+                        <th>Start</th>
+
+                        <th>End</th>
+
+                        <th>Purpose</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="bookingBody">
+
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- JWT AUTH -->
+
+    <script src="js/auth.js"></script>
+
+
+    <script>
+
+
+        // =========================================
+        // LOGIN CHECK
+        // =========================================
+
+        if (!requireLogin()) {
+
+            throw new Error(
+                "User not logged in"
+            );
+
+        }
+
+
+        // =========================================
+        // CURRENT USER
+        // =========================================
+
+        const user =
+            getCurrentUser();
+
+
+        // =========================================
+        // ADMIN CHECK
+        // =========================================
+
+        if (
+            !user ||
+            user.role !== "ADMIN"
+        ) {
+
+            alert(
+                "Access denied. Admin privileges required."
+            );
+
+            window.location.href =
+                "dashboard.html";
+
+            throw new Error(
+                "Admin access required"
+            );
+
+        }
+
+
+        // =========================================
+        // SHOW ADMIN INFO
+        // =========================================
+
+        document.getElementById(
+            "adminName"
+        ).textContent =
+            user.name;
+
+
+        document.getElementById(
+            "adminRole"
+        ).textContent =
+            user.role;
+
+
+        // =========================================
+        // LOAD ALL BOOKINGS
+        // =========================================
+
+        async function loadBookings() {
+
+            const loading =
+                document.getElementById(
+                    "loading"
+                );
+
+            const error =
+                document.getElementById(
+                    "error"
+                );
+
+            const empty =
+                document.getElementById(
+                    "empty"
+                );
+
+            const table =
+                document.getElementById(
+                    "bookingTable"
+                );
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        "/api/bookings"
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load bookings"
+                    );
+
+                }
+
+
+                const bookings =
+                    await response.json();
+
+
+                loading.style.display =
+                    "none";
+
+
+                if (
+                    !bookings ||
+                    bookings.length === 0
+                ) {
+
+                    empty.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                const tbody =
+                    document.getElementById(
+                        "bookingBody"
+                    );
+
+
+                tbody.innerHTML = "";
+
+
+                bookings.forEach(
+                    booking => {
+
+                        const row =
+                            document.createElement(
+                                "tr"
+                            );
+
+
+                        const studentName =
+                            booking.user &&
+                            booking.user.name
+                                ? booking.user.name
+                                : "Unknown";
+
+
+                        const studentEmail =
+                            booking.user &&
+                            booking.user.email
+                                ? booking.user.email
+                                : "-";
+
+
+                        const equipmentName =
+                            booking.equipment &&
+                            booking.equipment.name
+                                ? booking.equipment.name
+                                : "Unknown";
+
+
+                        const status =
+                            booking.status
+                                ? booking.status.toUpperCase()
+                                : "PENDING";
+
+
+                        let statusClass =
+                            "pending";
+
+
+                        if (
+                            status === "APPROVED"
+                        ) {
+
+                            statusClass =
+                                "approved";
+
+                        } else if (
+                            status === "REJECTED"
+                        ) {
+
+                            statusClass =
+                                "rejected";
+
+                        }
+
+
+                        let actions = "";
+
+
+                        if (
+                            status === "PENDING"
+                        ) {
+
+                            actions = `
+
+                                <button
+                                    class="action-btn approve-btn"
+                                    onclick="updateStatus(
+                                        ${booking.id},
+                                        'APPROVED'
+                                    )">
+
+                                    Approve
+
+                                </button>
+
+                                <button
+                                    class="action-btn reject-btn"
+                                    onclick="updateStatus(
+                                        ${booking.id},
+                                        'REJECTED'
+                                    )">
+
+                                    Reject
+
+                                </button>
+
+                            `;
+
+                        }
+
+
+                        actions += `
+
+                            <button
+                                class="action-btn delete-btn"
+                                onclick="deleteBooking(
+                                    ${booking.id}
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        `;
+
+
+                        row.innerHTML = `
+
+                            <td>
+                                ${booking.id}
+                            </td>
+
+                            <td>
+                                ${studentName}
+                            </td>
+
+                            <td>
+                                ${studentEmail}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    ${equipmentName}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${booking.bookingDate || "-"}
+                            </td>
+
+                            <td>
+                                ${booking.startTime || "-"}
+                            </td>
+
+                            <td>
+                                ${booking.endTime || "-"}
+                            </td>
+
+                            <td>
+                                ${booking.purpose || "-"}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="status ${statusClass}">
+
+                                    ${status}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+                                ${actions}
+                            </td>
+
+                        `;
+
+
+                        tbody.appendChild(
+                            row
+                        );
+
+                    }
+                );
+
+
+                table.style.display =
+                    "table";
+
+
+            } catch (err) {
+
+                console.error(
+                    err
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                error.style.display =
+                    "block";
+
+
+                error.textContent =
+                    "Failed to load bookings.";
+
+            }
+
+        }
+
+
+        // =========================================
+        // UPDATE STATUS
+        // =========================================
+
+        async function updateStatus(
+            bookingId,
+            status
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to " +
+                    status.toLowerCase() +
+                    " this booking?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/bookings/${bookingId}/status?status=${status}`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    alert(
+                        "Booking " +
+                        status.toLowerCase() +
+                        " successfully."
+                    );
+
+
+                    loadBookings();
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Failed to update booking."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                alert(
+                    "Something went wrong."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // DELETE BOOKING
+        // =========================================
+
+        async function deleteBooking(
+            bookingId
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete this booking?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/bookings/${bookingId}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Booking deleted successfully."
+                    );
+
+
+                    loadBookings();
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Failed to delete booking."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                alert(
+                    "Something went wrong."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // INITIAL LOAD
+        // =========================================
+
+        loadBookings();
+
+
+    </script>
+
+
+</body>
+
+</html>

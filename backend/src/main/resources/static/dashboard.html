@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartLab360 - Dashboard</title>
+
+    <!-- JWT Authentication Helper -->
+    <script src="js/auth.js"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
+
+
+        /* =========================
+           NAVBAR
+           ========================= */
+
+        .navbar {
+            background: #4f46e5;
+            color: white;
+
+            padding: 15px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow:
+                0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           NOTIFICATION
+           ========================= */
+
+        .notification-link {
+            position: relative;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 22px;
+        }
+
+        .notification-count {
+            position: absolute;
+
+            top: -8px;
+            right: -10px;
+
+            background: #ef4444;
+            color: white;
+
+            min-width: 19px;
+            height: 19px;
+
+            padding: 2px 5px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           LOGOUT
+           ========================= */
+
+        .logout-btn {
+            border: none;
+
+            background: white;
+            color: #4f46e5;
+
+            padding: 8px 15px;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #eef2ff;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+           ========================= */
+
+        .container {
+            max-width: 1200px;
+
+            margin: 35px auto;
+
+            padding: 0 20px;
+        }
+
+
+        /* =========================
+           WELCOME
+           ========================= */
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #666;
+        }
+
+        .role-badge {
+            display: inline-block;
+
+            margin-top: 10px;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            background: #e0e7ff;
+
+            color: #4338ca;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           STATS
+           ========================= */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.07);
+
+            border-left: 4px solid #4f46e5;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+
+            color: #666;
+
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+
+            font-weight: bold;
+
+            color: #222;
+        }
+
+
+        /* =========================
+           QUICK ACTIONS
+           ========================= */
+
+        .section-title {
+            margin-bottom: 18px;
+
+            font-size: 22px;
+        }
+
+        .actions-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .action-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            color: #222;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.07);
+
+            transition: 0.2s;
+
+            border: 1px solid #eee;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, 0.12);
+
+            border-color: #c7d2fe;
+        }
+
+        .action-icon {
+            font-size: 30px;
+
+            margin-bottom: 12px;
+        }
+
+        .action-card h3 {
+            margin-bottom: 7px;
+        }
+
+        .action-card p {
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .actions-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .nav-right {
+                gap: 10px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h1 {
+                font-size: 25px;
+            }
+        }
+
+
+        @media (max-width: 450px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 19px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+     ========================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        SmartLab360
+    </div>
+
+
+    <div class="nav-right">
+
+        <a href="equipment.html"
+           class="nav-link">
+
+            Equipment
+
+        </a>
+
+
+        <a href="booking.html"
+           class="nav-link">
+
+            Book Equipment
+
+        </a>
+
+
+        <a href="notifications.html"
+           class="notification-link"
+           title="Notifications">
+
+            🔔
+
+            <span
+                id="notificationCount"
+                class="notification-count"
+                style="display: none;">
+
+                0
+
+            </span>
+
+        </a>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================
+     MAIN
+     ========================= -->
+
+<div class="container">
+
+
+    <!-- =========================
+         WELCOME
+         ========================= -->
+
+    <div class="welcome">
+
+        <h1>
+
+            Welcome,
+            <span id="userName">
+                User
+            </span>
+
+        </h1>
+
+
+        <p>
+            Smart Laboratory Equipment
+            Management Dashboard
+        </p>
+
+
+        <span
+            id="userRole"
+            class="role-badge">
+
+            STUDENT
+
+        </span>
+
+    </div>
+
+
+
+    <!-- =========================
+         STATS
+         ========================= -->
+
+    <div class="stats-grid">
+
+
+        <!-- TOTAL EQUIPMENT -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Equipment
+            </h3>
+
+            <div
+                id="totalEquipment"
+                class="stat-number">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <!-- AVAILABLE EQUIPMENT -->
+
+        <div class="stat-card">
+
+            <h3>
+                Available Equipment
+            </h3>
+
+            <div
+                id="availableEquipment"
+                class="stat-number">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE BOOKINGS -->
+
+        <div class="stat-card">
+
+            <h3>
+                My Active Bookings
+            </h3>
+
+            <div
+                id="activeBookings"
+                class="stat-number">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING BOOKINGS -->
+
+        <div class="stat-card">
+
+            <h3>
+                Pending Requests
+            </h3>
+
+            <div
+                id="pendingRequests"
+                class="stat-number">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING MAINTENANCE -->
+
+        <div class="stat-card">
+
+            <h3>
+                Pending Maintenance
+            </h3>
+
+            <div
+                id="pendingMaintenance"
+                class="stat-number">
+
+                0
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         QUICK ACTIONS
+         ========================= -->
+
+    <h2 class="section-title">
+        Quick Actions
+    </h2>
+
+
+    <div class="actions-grid">
+
+
+        <!-- EQUIPMENT -->
+
+        <a
+            href="equipment.html"
+            class="action-card">
+
+            <div class="action-icon">
+                🔬
+            </div>
+
+            <h3>
+                Equipment
+            </h3>
+
+            <p>
+                View, add, edit and manage
+                laboratory equipment.
+            </p>
+
+        </a>
+
+
+
+        <!-- BOOKING -->
+
+        <a
+            href="booking.html"
+            class="action-card">
+
+            <div class="action-icon">
+                📅
+            </div>
+
+            <h3>
+                Book Equipment
+            </h3>
+
+            <p>
+                Reserve laboratory equipment
+                for your project or experiment.
+            </p>
+
+        </a>
+
+
+
+        <!-- MY BOOKINGS -->
+
+        <a
+            href="my-bookings.html"
+            class="action-card">
+
+            <div class="action-icon">
+                📋
+            </div>
+
+            <h3>
+                My Requests
+            </h3>
+
+            <p>
+                Track your booking requests
+                and approval status.
+            </p>
+
+        </a>
+
+
+
+        <!-- MAINTENANCE -->
+
+        <a
+            href="maintenance.html"
+            class="action-card">
+
+            <div class="action-icon">
+                🛠️
+            </div>
+
+            <h3>
+                Maintenance
+            </h3>
+
+            <p>
+                Report equipment problems and
+                track maintenance requests.
+            </p>
+
+        </a>
+
+
+
+        <!-- ADMIN BOOKING -->
+
+        <a
+            href="admin-bookings.html"
+            id="adminBookingAction"
+            class="action-card"
+            style="display: none;">
+
+            <div class="action-icon">
+                👨‍💼
+            </div>
+
+            <h3>
+                Admin Booking Management
+            </h3>
+
+            <p>
+                Approve or reject equipment
+                booking requests.
+            </p>
+
+        </a>
+
+
+
+        <!-- ADMIN MAINTENANCE -->
+
+        <a
+            href="admin-maintenance.html"
+            id="adminMaintenanceAction"
+            class="action-card"
+            style="display: none;">
+
+            <div class="action-icon">
+                🔧
+            </div>
+
+            <h3>
+                Admin Maintenance Management
+            </h3>
+
+            <p>
+                Manage maintenance workflow
+                and equipment problems.
+            </p>
+
+        </a>
+
+
+
+        <!-- QR TRACKING -->
+
+        <a
+            href="equipment.html"
+            class="action-card">
+
+            <div class="action-icon">
+                📱
+            </div>
+
+            <h3>
+                QR Equipment Tracking
+            </h3>
+
+            <p>
+                Scan equipment QR codes to
+                quickly view equipment details.
+            </p>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+// =====================================================
+// CHECK LOGIN
+// =====================================================
+
+if (!requireLogin()) {
+
+    throw new Error(
+        "User is not authenticated"
+    );
+
+}
+
+
+// =====================================================
+// GET CURRENT USER
+// =====================================================
+
+const user =
+    getCurrentUser();
+
+
+if (!user) {
+
+    logout();
+
+}
+
+
+// =====================================================
+// DISPLAY USER INFORMATION
+// =====================================================
+
+document.getElementById(
+    "userName"
+).textContent =
+    user.name || "User";
+
+
+document.getElementById(
+    "userRole"
+).textContent =
+    user.role || "STUDENT";
+
+
+// =====================================================
+// ADMIN ACTIONS
+// =====================================================
+
+if (isAdmin()) {
+
+    document.getElementById(
+        "adminBookingAction"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "adminMaintenanceAction"
+    ).style.display =
+        "block";
+
+}
+
+
+// =====================================================
+// LOAD EQUIPMENT STATS
+// =====================================================
+
+async function loadEquipmentStats() {
+
+    try {
+
+        const response =
+            await authFetch(
+                "/api/equipment"
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load equipment"
+            );
+
+        }
+
+
+        const equipment =
+            await response.json();
+
+
+        // Total
+
+        document.getElementById(
+            "totalEquipment"
+        ).textContent =
+            equipment.length;
+
+
+        // Available
+
+        const available =
+            equipment.filter(
+                item =>
+                    String(
+                        item.status || ""
+                    ).toUpperCase()
+                    === "AVAILABLE"
+            );
+
+
+        document.getElementById(
+            "availableEquipment"
+        ).textContent =
+            available.length;
+
+
+    } catch (error) {
+
+        console.error(
+            "Equipment stats error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// LOAD BOOKING STATS
+// =====================================================
+
+async function loadBookingStats() {
+
+    try {
+
+        const response =
+            await authFetch(
+                `/api/bookings/user/${user.userId}`
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load bookings"
+            );
+
+        }
+
+
+        const bookings =
+            await response.json();
+
+
+        // Active bookings
+
+        const active =
+            bookings.filter(
+                booking => {
+
+                    const status =
+                        String(
+                            booking.status || ""
+                        ).toUpperCase();
+
+
+                    return (
+                        status === "PENDING" ||
+                        status === "APPROVED"
+                    );
+
+                }
+            );
+
+
+        document.getElementById(
+            "activeBookings"
+        ).textContent =
+            active.length;
+
+
+        // Pending requests
+
+        const pending =
+            bookings.filter(
+                booking =>
+                    String(
+                        booking.status || ""
+                    ).toUpperCase()
+                    === "PENDING"
+            );
+
+
+        document.getElementById(
+            "pendingRequests"
+        ).textContent =
+            pending.length;
+
+
+    } catch (error) {
+
+        console.error(
+            "Booking stats error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// LOAD MAINTENANCE STATS
+// =====================================================
+
+async function loadMaintenanceStats() {
+
+    try {
+
+        const response =
+            await authFetch(
+                "/api/maintenance"
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load maintenance"
+            );
+
+        }
+
+
+        const maintenance =
+            await response.json();
+
+
+        const pending =
+            maintenance.filter(
+                request =>
+                    String(
+                        request.status || ""
+                    ).toUpperCase()
+                    === "PENDING"
+            );
+
+
+        document.getElementById(
+            "pendingMaintenance"
+        ).textContent =
+            pending.length;
+
+
+    } catch (error) {
+
+        console.error(
+            "Maintenance stats error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// LOAD NOTIFICATION COUNT
+// =====================================================
+
+async function loadNotificationCount() {
+
+    try {
+
+        const response =
+            await authFetch(
+                `/api/notifications/user/${user.userId}/count`
+            );
+
+
+        if (!response) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load notifications"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const count =
+            Number(
+                data.unreadCount || 0
+            );
+
+
+        const countElement =
+            document.getElementById(
+                "notificationCount"
+            );
+
+
+        if (count > 0) {
+
+            countElement.textContent =
+                count > 99
+                    ? "99+"
+                    : count;
+
+
+            countElement.style.display =
+                "inline-block";
+
+        } else {
+
+            countElement.style.display =
+                "none";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Notification count error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// LOAD DASHBOARD DATA
+// =====================================================
+
+loadEquipmentStats();
+
+loadBookingStats();
+
+loadMaintenanceStats();
+
+loadNotificationCount();
+
+
+</script>
+
+
+</body>
+
+</html>

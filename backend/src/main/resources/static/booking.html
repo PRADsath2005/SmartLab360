@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmartLab360 - Book Equipment</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #1e293b;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 45px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .user-info {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            color: #1e40af;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .time-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            display: none;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+
+        .success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .time-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+
+        <div class="logo">
+            🔬 SmartLab360
+        </div>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="equipment.html">Equipment</a>
+            <a href="my-bookings.html">My Bookings</a>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+                Logout
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <div class="container">
+
+        <div class="card">
+
+            <h1>Book Laboratory Equipment</h1>
+
+            <p class="subtitle">
+                Select equipment and choose your required booking time.
+            </p>
+
+
+            <!-- USER INFO -->
+            <div class="user-info">
+
+                Logged in as:
+
+                <strong id="userName">
+                    Loading...
+                </strong>
+
+                <br>
+
+                Email:
+                <span id="userEmail">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+            <div
+                id="message"
+                class="message">
+            </div>
+
+
+            <!-- BOOKING FORM -->
+            <form id="bookingForm">
+
+
+                <!-- EQUIPMENT -->
+                <div class="form-group">
+
+                    <label for="equipment">
+                        Select Equipment
+                    </label>
+
+                    <select
+                        id="equipment"
+                        required>
+
+                        <option value="">
+                            Loading equipment...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE -->
+                <div class="form-group">
+
+                    <label for="bookingDate">
+                        Booking Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="bookingDate"
+                        required>
+
+                </div>
+
+
+                <!-- TIME -->
+                <div class="time-row">
+
+                    <div class="form-group">
+
+                        <label for="startTime">
+                            Start Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="startTime"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="endTime">
+                            End Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="endTime"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PURPOSE -->
+                <div class="form-group">
+
+                    <label for="purpose">
+                        Purpose
+                    </label>
+
+                    <textarea
+                        id="purpose"
+                        placeholder="Enter reason for booking..."
+                        required></textarea>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+                <button
+                    type="submit"
+                    class="submit-btn">
+
+                    📅 Submit Booking
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- JWT AUTH -->
+    <script src="js/auth.js"></script>
+
+
+    <script>
+
+        // =========================================
+        // LOGIN CHECK
+        // =========================================
+
+        if (!requireLogin()) {
+            throw new Error("User not logged in");
+        }
+
+
+        // =========================================
+        // CURRENT USER
+        // =========================================
+
+        const user =
+            getCurrentUser();
+
+
+        if (user) {
+
+            document.getElementById("userName")
+                .textContent =
+                user.name;
+
+            document.getElementById("userEmail")
+                .textContent =
+                user.email;
+        }
+
+
+        // =========================================
+        // SET MINIMUM DATE = TODAY
+        // =========================================
+
+        const today =
+            new Date()
+                .toISOString()
+                .split("T")[0];
+
+        document.getElementById("bookingDate")
+            .setAttribute(
+                "min",
+                today
+            );
+
+
+        // =========================================
+        // LOAD EQUIPMENT
+        // =========================================
+
+        async function loadEquipment() {
+
+            try {
+
+                const response =
+                    await authFetch(
+                        "/api/equipment"
+                    );
+
+                if (!response) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load equipment"
+                    );
+                }
+
+
+                const equipmentList =
+                    await response.json();
+
+
+                const select =
+                    document.getElementById(
+                        "equipment"
+                    );
+
+
+                select.innerHTML =
+                    '<option value="">Select Equipment</option>';
+
+
+                equipmentList
+                    .filter(
+                        equipment =>
+                            equipment.status &&
+                            equipment.status
+                                .toUpperCase() ===
+                            "AVAILABLE"
+                    )
+                    .forEach(
+                        equipment => {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value =
+                                equipment.id;
+
+                            option.textContent =
+                                equipment.name +
+                                " - " +
+                                equipment.location;
+
+                            select.appendChild(
+                                option
+                            );
+                        }
+                    );
+
+
+                if (
+                    select.options.length === 1
+                ) {
+
+                    select.innerHTML =
+                        '<option value="">No equipment available</option>';
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                showMessage(
+                    "Unable to load equipment.",
+                    "error"
+                );
+            }
+        }
+
+
+        // =========================================
+        // SHOW MESSAGE
+        // =========================================
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+            message.textContent =
+                text;
+
+            message.className =
+                "message " + type;
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+
+        // =========================================
+        // BOOKING SUBMIT
+        // =========================================
+
+        document.getElementById(
+            "bookingForm"
+        ).addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const equipmentId =
+                    document.getElementById(
+                        "equipment"
+                    ).value;
+
+                const bookingDate =
+                    document.getElementById(
+                        "bookingDate"
+                    ).value;
+
+                const startTime =
+                    document.getElementById(
+                        "startTime"
+                    ).value;
+
+                const endTime =
+                    document.getElementById(
+                        "endTime"
+                    ).value;
+
+                const purpose =
+                    document.getElementById(
+                        "purpose"
+                    ).value.trim();
+
+
+                // =================================
+                // VALIDATION
+                // =================================
+
+                if (!equipmentId) {
+
+                    showMessage(
+                        "Please select equipment.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (endTime <= startTime) {
+
+                    showMessage(
+                        "End time must be after start time.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (!purpose) {
+
+                    showMessage(
+                        "Please enter booking purpose.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                try {
+
+                    const response =
+                        await authFetch(
+                            `/api/bookings?userId=${user.userId}&equipmentId=${equipmentId}`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        bookingDate:
+                                            bookingDate,
+
+                                        startTime:
+                                            startTime,
+
+                                        endTime:
+                                            endTime,
+
+                                        purpose:
+                                            purpose,
+
+                                        status:
+                                            "PENDING"
+                                    })
+                            }
+                        );
+
+
+                    if (!response) {
+                        return;
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    // =================================
+                    // SUCCESS
+                    // =================================
+
+                    if (response.ok) {
+
+                        showMessage(
+                            "Booking submitted successfully! Booking ID: " +
+                            data.id,
+                            "success"
+                        );
+
+
+                        document.getElementById(
+                            "bookingForm"
+                        ).reset();
+
+
+                        // Keep today's minimum date
+                        document.getElementById(
+                            "bookingDate"
+                        ).setAttribute(
+                            "min",
+                            today
+                        );
+
+
+                        setTimeout(
+                            function () {
+
+                                window.location.href =
+                                    "my-bookings.html";
+
+                            },
+                            1800
+                        );
+
+
+                    } else {
+
+                        showMessage(
+                            data.message ||
+                            "Booking failed.",
+                            "error"
+                        );
+                    }
+
+
+                } catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+                    showMessage(
+                        "Something went wrong. Please try again.",
+                        "error"
+                    );
+                }
+
+            }
+        );
+
+
+        // =========================================
+        // LOAD DATA
+        // =========================================
+
+        loadEquipment();
+
+    </script>
+
+</body>
+
+</html>

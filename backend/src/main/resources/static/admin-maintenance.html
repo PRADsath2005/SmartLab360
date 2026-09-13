@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartLab360 - Admin Maintenance</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #1e293b;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #111827;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        .admin-info {
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #1e293b;
+            margin-bottom: 22px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #eef2f7;
+            color: #1e293b;
+        }
+
+        td {
+            color: #334155;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-btn {
+            border: none;
+            color: white;
+            padding: 7px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .progress-btn {
+            background: #2563eb;
+        }
+
+        .progress-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .complete-btn {
+            background: #16a34a;
+        }
+
+        .complete-btn:hover {
+            background: #15803d;
+        }
+
+        .reject-btn {
+            background: #ef4444;
+        }
+
+        .reject-btn:hover {
+            background: #dc2626;
+        }
+
+        .delete-btn {
+            background: #64748b;
+        }
+
+        .delete-btn:hover {
+            background: #475569;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        .error {
+            text-align: center;
+            padding: 30px;
+            color: #dc2626;
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .container {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <div class="logo">
+            🔬 SmartLab360 - Admin
+        </div>
+
+        <div class="nav-links">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="admin-bookings.html">
+                Bookings
+            </a>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <h1>
+            Maintenance Management
+        </h1>
+
+        <p class="subtitle">
+            Review and manage laboratory equipment maintenance requests
+        </p>
+
+
+        <div class="card">
+
+
+            <div class="admin-info">
+
+                Logged in as:
+
+                <strong id="adminName">
+                    Loading...
+                </strong>
+
+                &nbsp; | &nbsp;
+
+                Role:
+
+                <strong id="adminRole">
+                    Loading...
+                </strong>
+
+            </div>
+
+
+            <h2>
+                All Maintenance Requests
+            </h2>
+
+
+            <div
+                id="loading"
+                class="loading">
+
+                Loading maintenance requests...
+
+            </div>
+
+
+            <div
+                id="error"
+                class="error"
+                style="display:none;">
+
+            </div>
+
+
+            <div
+                id="empty"
+                class="empty"
+                style="display:none;">
+
+                No maintenance requests found.
+
+            </div>
+
+
+            <table
+                id="maintenanceTable"
+                style="display:none;">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Equipment</th>
+
+                        <th>Reported By</th>
+
+                        <th>Email</th>
+
+                        <th>Problem</th>
+
+                        <th>Date</th>
+
+                        <th>Assigned To</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="maintenanceBody">
+
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- JWT AUTH -->
+
+    <script src="js/auth.js"></script>
+
+
+    <script>
+
+
+        // =========================================
+        // LOGIN CHECK
+        // =========================================
+
+        if (!requireLogin()) {
+
+            throw new Error(
+                "User not logged in"
+            );
+
+        }
+
+
+        // =========================================
+        // CURRENT USER
+        // =========================================
+
+        const user =
+            getCurrentUser();
+
+
+        // =========================================
+        // ADMIN CHECK
+        // =========================================
+
+        if (
+            !user ||
+            user.role !== "ADMIN"
+        ) {
+
+            alert(
+                "Access denied. Admin privileges required."
+            );
+
+            window.location.href =
+                "dashboard.html";
+
+            throw new Error(
+                "Admin access required"
+            );
+
+        }
+
+
+        // =========================================
+        // ADMIN INFO
+        // =========================================
+
+        document.getElementById(
+            "adminName"
+        ).textContent =
+            user.name;
+
+
+        document.getElementById(
+            "adminRole"
+        ).textContent =
+            user.role;
+
+
+        // =========================================
+        // LOAD ALL REQUESTS
+        // =========================================
+
+        async function loadRequests() {
+
+            const loading =
+                document.getElementById(
+                    "loading"
+                );
+
+            const error =
+                document.getElementById(
+                    "error"
+                );
+
+            const empty =
+                document.getElementById(
+                    "empty"
+                );
+
+            const table =
+                document.getElementById(
+                    "maintenanceTable"
+                );
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        "/api/maintenance"
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load maintenance requests"
+                    );
+
+                }
+
+
+                const requests =
+                    await response.json();
+
+
+                loading.style.display =
+                    "none";
+
+
+                if (
+                    !requests ||
+                    requests.length === 0
+                ) {
+
+                    empty.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                const tbody =
+                    document.getElementById(
+                        "maintenanceBody"
+                    );
+
+
+                tbody.innerHTML = "";
+
+
+                requests.forEach(
+                    request => {
+
+                        const row =
+                            document.createElement(
+                                "tr"
+                            );
+
+
+                        const equipmentName =
+                            request.equipment &&
+                            request.equipment.name
+                                ? request.equipment.name
+                                : "Unknown";
+
+
+                        const reportedBy =
+                            request.reportedBy &&
+                            request.reportedBy.name
+                                ? request.reportedBy.name
+                                : "Unknown";
+
+
+                        const email =
+                            request.reportedBy &&
+                            request.reportedBy.email
+                                ? request.reportedBy.email
+                                : "-";
+
+
+                        const status =
+                            request.status
+                                ? request.status.toUpperCase()
+                                : "PENDING";
+
+
+                        let statusClass =
+                            "pending";
+
+
+                        if (
+                            status === "IN_PROGRESS"
+                        ) {
+
+                            statusClass =
+                                "in-progress";
+
+                        } else if (
+                            status === "COMPLETED"
+                        ) {
+
+                            statusClass =
+                                "completed";
+
+                        } else if (
+                            status === "REJECTED"
+                        ) {
+
+                            statusClass =
+                                "rejected";
+
+                        }
+
+
+                        let actions = "";
+
+
+                        if (
+                            status === "PENDING"
+                        ) {
+
+                            actions += `
+
+                                <button
+                                    class="action-btn progress-btn"
+                                    onclick="updateStatus(
+                                        ${request.id},
+                                        'IN_PROGRESS'
+                                    )">
+
+                                    Start
+
+                                </button>
+
+                                <button
+                                    class="action-btn reject-btn"
+                                    onclick="updateStatus(
+                                        ${request.id},
+                                        'REJECTED'
+                                    )">
+
+                                    Reject
+
+                                </button>
+
+                            `;
+
+                        }
+
+
+                        if (
+                            status === "IN_PROGRESS"
+                        ) {
+
+                            actions += `
+
+                                <button
+                                    class="action-btn complete-btn"
+                                    onclick="updateStatus(
+                                        ${request.id},
+                                        'COMPLETED'
+                                    )">
+
+                                    Complete
+
+                                </button>
+
+                            `;
+
+                        }
+
+
+                        actions += `
+
+                            <button
+                                class="action-btn delete-btn"
+                                onclick="deleteRequest(
+                                    ${request.id}
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        `;
+
+
+                        row.innerHTML = `
+
+                            <td>
+                                ${request.id}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    ${equipmentName}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${reportedBy}
+                            </td>
+
+                            <td>
+                                ${email}
+                            </td>
+
+                            <td>
+                                ${request.problemDescription || "-"}
+                            </td>
+
+                            <td>
+                                ${request.maintenanceDate || "-"}
+                            </td>
+
+                            <td>
+                                ${request.assignedTo || "-"}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="status ${statusClass}">
+
+                                    ${status}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+                                ${actions}
+                            </td>
+
+                        `;
+
+
+                        tbody.appendChild(
+                            row
+                        );
+
+                    }
+                );
+
+
+                table.style.display =
+                    "table";
+
+
+            } catch (err) {
+
+                console.error(
+                    err
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                error.style.display =
+                    "block";
+
+
+                error.textContent =
+                    "Failed to load maintenance requests.";
+
+            }
+
+        }
+
+
+        // =========================================
+        // UPDATE STATUS
+        // =========================================
+
+        async function updateStatus(
+            requestId,
+            status
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to change this request to " +
+                    status +
+                    "?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/maintenance/${requestId}/status?status=${status}`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    alert(
+                        "Maintenance request updated successfully."
+                    );
+
+
+                    loadRequests();
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Failed to update request."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    "Something went wrong."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // DELETE REQUEST
+        // =========================================
+
+        async function deleteRequest(
+            requestId
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete this maintenance request?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await authFetch(
+                        `/api/maintenance/${requestId}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (!response) {
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Maintenance request deleted successfully."
+                    );
+
+
+                    loadRequests();
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Failed to delete request."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    "Something went wrong."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // INITIAL LOAD
+        // =========================================
+
+        loadRequests();
+
+
+    </script>
+
+
+</body>
+
+</html>
