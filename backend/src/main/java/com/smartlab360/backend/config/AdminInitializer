@@ -1,0 +1,102 @@
+package com.smartlab360.backend.config;
+
+import com.smartlab360.backend.entity.Role;
+import com.smartlab360.backend.entity.User;
+import com.smartlab360.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class AdminInitializer implements CommandLineRunner {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Value("${ADMIN_NAME:SmartLab360 Admin}")
+    private String adminName;
+
+    @Value("${ADMIN_EMAIL:admin@smartlab360.com}")
+    private String adminEmail;
+
+    @Value("${ADMIN_PASSWORD:}")
+    private String adminPassword;
+
+    public AdminInitializer(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void run(String... args) {
+
+        // If ADMIN_PASSWORD is not configured,
+        // do not create an admin account.
+        if (adminPassword == null || adminPassword.isBlank()) {
+
+            System.out.println(
+                    "ADMIN_PASSWORD not configured. " +
+                    "Skipping admin initialization."
+            );
+
+            return;
+        }
+
+        // Check whether admin email already exists
+        var existingUser =
+                userRepository.findByEmail(adminEmail);
+
+        if (existingUser.isPresent()) {
+
+            User admin = existingUser.get();
+
+            // Make sure this specific account is ADMIN
+            if (admin.getRole() != Role.ADMIN) {
+
+                admin.setRole(Role.ADMIN);
+
+                admin.setName(adminName);
+
+                admin.setPassword(
+                        passwordEncoder.encode(adminPassword)
+                );
+
+                userRepository.save(admin);
+
+                System.out.println(
+                        "SmartLab360 ADMIN account updated."
+                );
+
+            } else {
+
+                System.out.println(
+                        "SmartLab360 ADMIN account already exists."
+                );
+            }
+
+            return;
+        }
+
+        // Create the ADMIN account
+        User admin = new User();
+
+        admin.setName(adminName);
+        admin.setEmail(adminEmail);
+
+        admin.setPassword(
+                passwordEncoder.encode(adminPassword)
+        );
+
+        admin.setRole(Role.ADMIN);
+
+        userRepository.save(admin);
+
+        System.out.println(
+                "SmartLab360 ADMIN account created."
+        );
+    }
+}

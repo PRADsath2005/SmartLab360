@@ -20,27 +20,45 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ============================
+    // REGISTER USER
+    // ============================
+
     public User registerUser(User user) {
 
+        // Check whether email already exists
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Public registration can create STUDENT accounts only
+        user.setRole(Role.STUDENT);
 
-        if (user.getRole() == null) {
-            user.setRole(Role.STUDENT);
-        }
+        // Encrypt password before saving
+        user.setPassword(
+                passwordEncoder.encode(user.getPassword())
+        );
 
         return userRepository.save(user);
     }
+
+    // ============================
+    // GET ALL USERS
+    // ============================
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    // ============================
+    // GET USER BY EMAIL
+    // ============================
+
     public User getUserByEmail(String email) {
+
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(
+                        () -> new RuntimeException("User not found")
+                );
     }
 }
